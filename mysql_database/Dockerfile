@@ -9,7 +9,7 @@ ENV MYSQL_DATABASE=news_database
 COPY init.sql /docker-entrypoint-initdb.d/
 
 # Expose the MySQL port on 3307
-EXPOSE 3307
+EXPOSE 3306
 
 # Change the MySQL configuration to listen on port 3307
-CMD ["mysqld", "--port=3307"]
+CMD ["mysqld", "--port=3306"]

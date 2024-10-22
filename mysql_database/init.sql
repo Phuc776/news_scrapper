@@ -1,6 +1,8 @@
-CREATE DATABASE news_database;
+CREATE DATABASE IF NOT EXISTS news_database;
+
 USE news_database;
-CREATE TABLE news_articals (
+
+CREATE TABLE news_articles (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255),
     author VARCHAR(255),
@@ -11,12 +13,12 @@ CREATE TABLE news_articals (
     excerpt TEXT,
     summary TEXT,
     rights VARCHAR(255),
-    rank INT,
+    rank_news INT,
     topic VARCHAR(50),
     country VARCHAR(10),
     language VARCHAR(10),
     authors TEXT,
     media TEXT,
     is_opinion BOOLEAN,
-    twitter_account VARCHAR(50),
+    twitter_account VARCHAR(50)
 );
