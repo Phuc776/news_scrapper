@@ -1,42 +1,16 @@
 import requests
-from dotenv import load_dotenv
-import os
-
-from dotenv import load_dotenv
-import os
 import mysql.connector
+from config.logger import AppLog
+from config.config import API_KEY
+from .utils import init_connection_sql
+import datetime
 
-# Load environment variables from .env file
-load_dotenv()
-API_KEY = os.getenv('API_KEY')
-PASSWORD_MYSQL = os.getenv('PASSWORD_MYSQL')
-
-def init_connection_sql():
-    try:
-        connection = mysql.connector.connect(
-            host="localhost",
-            port="1111",
-            database="news_database",
-            user="root",
-            password=PASSWORD_MYSQL
-        )
-    except mysql.connector.Error as e:
-        print(e)
-        return None
-    
-    if connection.is_connected():
-        print("Connected to MySQL database")
-        return connection
-
-    return None
-
-con = init_connection_sql()
-
-def bulk_insert_news(articles):
+def insert_to_db(articles):
     """Bulk insert news data into the MySQL database."""
+    AppLog.info(f"Start inserting {len(articles)} records to the database at {datetime.datetime.now()}.")
     connection = init_connection_sql()
     if connection is None:
-        print("Failed to connect to the database.")
+        AppLog.error("Error: Could not establish a MySQL connection.")
         return
 
     try:
@@ -72,16 +46,15 @@ def bulk_insert_news(articles):
 
         cursor.executemany(insert_query, data_to_insert)
         connection.commit()
-        print(f"{cursor.rowcount} records inserted successfully.")
+        AppLog.info(f"{cursor.rowcount} records inserted successfully at {datetime.datetime.now()}.")
 
-    except mysql.connector.Error as e:
-        print(f"Error: {e}")
+    except mysql.connector.Error as error:
+        AppLog.error(f"Failed to insert data into MySQL table: {error}")
 
     finally:
         if connection.is_connected():
             cursor.close()
             connection.close()
-            print("MySQL connection is closed")
 
 def get_raw_data():
     """Get raw data from the Newscatcher API."""
@@ -103,5 +76,6 @@ def get_raw_data():
         return response.json().get("articles", [])
 
 if __name__ == "__main__":
-    articles_date = get_raw_data()
-    bulk_insert_news(articles_date)
+    while True:
+        articles_data = get_raw_data()
+        insert_to_db(articles_data)   

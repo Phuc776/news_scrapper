@@ -20,5 +20,7 @@ CREATE TABLE news_articles (
     authors TEXT,
     media TEXT,
     is_opinion BOOLEAN,
-    twitter_account VARCHAR(50)
+    twitter_account VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

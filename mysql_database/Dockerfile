@@ -2,7 +2,7 @@
 FROM mysql:latest
 
 # Set environment variables for MySQL
-ENV MYSQL_ROOT_PASSWORD=rootpassword
+ENV MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
 ENV MYSQL_DATABASE=news_database
 
 # Copy the initialization SQL script to the Docker container
