@@ -1,8 +1,8 @@
 import requests
 import mysql.connector
-from config.logger import AppLog
-from config.config import API_KEY
-from .utils import init_connection_sql
+from utils.logger import AppLog
+from utils.config import API_KEY
+from utils.utils import init_connection_sql
 import datetime
 
 def insert_to_db(articles):

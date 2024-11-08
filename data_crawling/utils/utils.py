@@ -1,7 +1,7 @@
 import mysql.connector
 from dotenv import load_dotenv
-from config.config import DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD
-from config.logger import AppLog
+from utils.config import DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD
+from utils.logger import AppLog
 
 load_dotenv()
 
