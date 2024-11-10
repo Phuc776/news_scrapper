@@ -2,6 +2,7 @@
 
 NewScrapper API is a microservice-based Python project designed for web scraping, storing, and providing APIs to access news articles. It consists of three main modules: mysql-service, data-crawling (data ingestion), and db-api (API provider). The project is built to be scalable and modular, allowing each service to operate independently.
 
+Following Newscatcher API for more. [https://www.newscatcherapi.com/](https://www.newscatcherapi.com/)
 ## Modules
 
 ### 1. mysql-service
@@ -14,7 +15,7 @@ This service is responsible for handling all database operations. It sets up and
   - Database connection and pooling
 
 ### 2. data-crawling (Data Ingestion)
-The data-crawling module fetches data from the [Newscatcher API](https://newscatcherapi.com). It collects news articles from various sources, cleans the data, and stores it in the MySQL database.
+The data-crawling module fetches data from the [Newscatcher API](https://www.newscatcherapi.com/). It collects news articles from various sources, cleans the data, and stores it in the MySQL database.
 
 - **Technologies Used:** Python, Newscatcher API
 - **Main Functionality:**
