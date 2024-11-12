@@ -11,10 +11,9 @@ const FilterChart = ({ topics, onFilterChange }) => {
   const [selectedDates, setSelectedDates] = useState([null, null]);
 
   const handleTopicChange = (value) => {
-    if (value === DEFAULT_VALUE) value = '';
     setSelectedTopic(value);
     onFilterChange({
-      topic: value,
+      topic: value === DEFAULT_VALUE ? '' : value,
       startDate: selectedDates[0],
       endDate: selectedDates[1],
     });
