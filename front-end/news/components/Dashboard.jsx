@@ -4,6 +4,9 @@ import FilterChart from '../components/FilterChart';
 import BarChart from '../components/BarChart';
 import LineChart from '../components/LineChart';
 import PieChart from '../components/PieChart';
+import ScatterPlot from './ScatterPlot';
+import StackedBarChart from './StackedBarChart';
+import HeatmapChart from './HeatmapChart';
 
 const Dashboard = ({ data, topics }) => {
   const [filters, setFilters] = useState({ topic: '', country: '', month: '' });
@@ -72,6 +75,21 @@ const Dashboard = ({ data, topics }) => {
 
   const lineXData = [...new Set(filteredData.map(item => item.topic))];
 
+  const scatterData = filteredData.map(item => ({
+    rank: item.rank,
+    published_date: item.published_date,
+  }));
+
+  const stackedBarData = filteredData.map(item => ({
+    country: item.country,
+    topic: item.topic,
+  }));
+
+  const heatmapData = filteredData.map(item => ({
+    country: item.country,
+    published_date: item.published_date,
+  }));
+
   return (
     <Container style={{ maxWidth: '1800px' }}>
       <Typography variant="h1" gutterBottom align="center" style={{ fontSize: '3rem', marginBottom: '40px' }}>
@@ -92,6 +110,18 @@ const Dashboard = ({ data, topics }) => {
         </Grid>
         <Grid item xs={12} md={6}>
           <PieChart title="Số Lượng Bài Báo Theo Tháng Xuất Bản" data={pieDataMonth} tooltipFormatter="{b}: {c} bài báo ({d}%)" />
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <ScatterPlot title="Scatter Plot: Rank vs Ngày xuất bản" data={scatterData} />
+        </Grid>
+        
+        <Grid item xs={12} md={6}>
+          <StackedBarChart title="Stacked Bar Chart: Quốc gia vs Chủ đề" data={stackedBarData} />
+        </Grid>
+
+        <Grid item xs={12} md={12}>
+          <HeatmapChart title="Heatmap: Bài báo theo tháng theo quốc gia" data={heatmapData} />
         </Grid>
       </Grid>
     </Container>
