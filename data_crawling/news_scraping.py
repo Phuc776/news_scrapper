@@ -61,7 +61,7 @@ def get_raw_data():
     url = "https://api.newscatcherapi.com/v2/search"
 
     # You can customize the query parameter (e.g., "technology" or "sports")
-    querystring = {"q":"*", "lang":"en", "sort_by":"date", "page_size": 100, "page": 1}
+    querystring = {"q":"*", "lang":"en", "sort_by":"date", "page_size": 100, "page": 1, "from_rank": 1, "to_rank": 10000}
 
     headers = {
         'x-api-key': API_KEY
