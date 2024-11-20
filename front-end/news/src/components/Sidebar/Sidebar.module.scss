@@ -1,0 +1,49 @@
+.sidebar {
+    width: 250px;
+    position: fixed;
+    top: 64px;
+    bottom: 0;
+    left: 0;
+    height: calc(100vh - 64px);
+    z-index: 10;
+    border-right: 0.5px solid #C8CBD9;
+    background-color: #FFFFFF;
+
+    .nav_list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        margin-top: 40px;
+
+        .nav_item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border-radius: 2px;
+
+            .icon {
+                color:#93CAE1;
+            }
+
+            .nav_text {
+                margin-left: 12px;
+                font-size: 16px;
+                line-height: 20px;
+                font-weight: 400;
+                letter-spacing: 0.5px;
+                color: #273240;
+            }
+
+            &:hover {
+                background-color: #DBF0F8;
+            }
+
+            &.active {
+                background-color: #DBF0F8;
+                font-weight: bold;
+            }
+        }
+    }
+}

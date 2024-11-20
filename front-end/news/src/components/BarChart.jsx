@@ -21,6 +21,12 @@ const BarChart = ({ title, xData, yData }) => {
           data: yData,
           barWidth: '60%',
           barCategoryGap: '50%',
+          itemStyle: {
+            color: function (params) {
+              const colors = ['#93CAE1', '#B0D9F1', '#C8E6F8', '#A1C8E6', '#B2D8F0'];
+              return colors[params.dataIndex % colors.length];
+            },
+          },
         },
       ],
     };

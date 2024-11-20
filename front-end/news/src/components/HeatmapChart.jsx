@@ -29,6 +29,9 @@ const HeatmapChart = ({ title, data }) => {
       orient: 'horizontal',
       left: 'center',
       bottom: '15%',
+      inRange: {
+        color: ['#DBF0F8', '#93CAE1', '#B0D9F1'],
+      },
     },
     series: [
       {

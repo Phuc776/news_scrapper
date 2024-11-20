@@ -27,7 +27,13 @@ const StackedBarChart = ({ title, data }) => {
     },
     xAxis: { type: 'category', data: countries },
     yAxis: { type: 'value', name: 'Số lượng bài báo' },
-    series: seriesData,
+    // series: seriesData,
+    series: seriesData.map((series, index) => ({
+      ...series,
+      itemStyle: {
+        color: ['#93CAE1', '#A1C8E6', '#B0D9F1', '#C8E6F8'][index % 4],
+      },
+    })),
   };
 
   return <ReactEcharts option={options} style={{ height: '400px' }} />;

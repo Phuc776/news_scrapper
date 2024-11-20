@@ -1,0 +1,13 @@
+.homepage {
+    display: flex;
+    flex-direction: row;
+    background: #fff;
+}
+
+.content {
+    background: #fff;
+    padding: 24px;
+    flex-grow: 1;
+    margin-top: 56px; 
+    overflow: auto;
+}

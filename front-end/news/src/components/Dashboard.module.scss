@@ -1,0 +1,19 @@
+.dashboard_container {
+    padding: 20px;
+    background-color: #f4f7fc;
+    border-radius: 10px;
+}
+
+.chart_container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard_loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}

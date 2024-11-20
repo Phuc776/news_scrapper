@@ -16,6 +16,12 @@ const ScatterPlot = ({ title, data }) => {
             type: 'scatter',
             data: data.map(item => [item.published_date, item.rank]),
             symbolSize: 10,
+            itemStyle: {
+              color: function (params) {
+                const colors = ['#93CAE1', '#A1C8E6', '#B0D9F1', '#C8E6F8'];
+                return colors[params.dataIndex % colors.length];
+              },
+            },
           },
         ],
     };

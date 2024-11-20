@@ -16,6 +16,12 @@ const PieChart = ({ title, data, tooltipFormatter }) => {
         data: data,
         radius: '60%',
         label: { formatter: '{b}: {c}' },
+        itemStyle: {
+          color: function (params) {
+            const colors = ['#93CAE1', '#B0D9F1', '#C8E6F8', '#A1C8E6'];
+            return colors[params.dataIndex % colors.length];
+          },
+        },
       },
     ],
   };

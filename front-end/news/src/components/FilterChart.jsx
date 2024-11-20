@@ -29,7 +29,7 @@ const FilterChart = ({ topics, onFilterChange }) => {
   };
 
   return (
-    <Space style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center' }}>
+    <Space style={{ marginBottom: '40px', display: 'flex', justifyContent: 'start' }}>
       <Select
         value={selectedTopic}
         onChange={handleTopicChange}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Grid, Container, Typography, CircularProgress } from '@mui/material';
+import styles from './Dashboard.module.scss';
+import { Layout, Row, Col, Typography, Spin } from 'antd';
 import FilterChart from '../components/FilterChart';
 import BarChart from '../components/BarChart';
 import LineChart from '../components/LineChart';
@@ -31,9 +32,9 @@ const Dashboard = ({ data, topics }) => {
 
   if (!data || data.length === 0) {
     return (
-      <Container style={{ maxWidth: '1800px', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <CircularProgress />
-      </Container>
+      <div className={styles.dashboard_loading}>
+        <Spin size="large" />
+      </div>
     );
   }
 
@@ -61,7 +62,7 @@ const Dashboard = ({ data, topics }) => {
     else acc.push({ name: item.country, value: 1 });
     return acc;
   }, []);
-  
+
   const barXData = barDataCountry.map(item => item.name);
   const barYData = barDataCountry.map(item => item.value);
 
@@ -91,40 +92,51 @@ const Dashboard = ({ data, topics }) => {
   }));
 
   return (
-    <Container style={{ maxWidth: '1800px' }}>
-      <Typography variant="h1" gutterBottom align="center" style={{ fontSize: '3rem', marginBottom: '40px' }}>
-        News Analytics Dashboard
-      </Typography>
+    <div className={styles.dashboard_container}>
 
       <FilterChart topics={topics} onFilterChange={handleFilterChange} />
 
-      <Grid container spacing={3} justifyContent="center">
-        <Grid item xs={12} md={6}>
-          <BarChart title="Số Lượng Bài Báo Theo Country" xData={barXData} yData={barYData} />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <LineChart title="Trung Bình Rank Theo Topic" xData={lineXData} yData={lineData} />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <PieChart title="Số Lượng Bài Báo Theo Topic" data={pieDataTopic} tooltipFormatter="{b}: {c} bài báo ({d}%)" />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <PieChart title="Số Lượng Bài Báo Theo Tháng Xuất Bản" data={pieDataMonth} tooltipFormatter="{b}: {c} bài báo ({d}%)" />
-        </Grid>
+      <Row gutter={[16, 16]} justify="center">
+        <Col xs={24} md={12}>
+          <div className={styles.chart_container}>
+            <BarChart title="Số Lượng Bài Báo Theo Country" xData={barXData} yData={barYData} />
+          </div>
+        </Col>
+        <Col xs={24} md={12}>
+          <div className={styles.chart_container}>
+            <LineChart title="Trung Bình Rank Theo Topic" xData={lineXData} yData={lineData} />
+          </div>
+        </Col>
+        <Col xs={24} md={12}>
+          <div className={styles.chart_container}>
+            <PieChart title="Số Lượng Bài Báo Theo Topic" data={pieDataTopic} tooltipFormatter="{b}: {c} bài báo ({d}%)" />
+          </div>
+        </Col>
+        <Col xs={24} md={12}>
+          <div className={styles.chart_container}>
+            <PieChart title="Số Lượng Bài Báo Theo Tháng Xuất Bản" data={pieDataMonth} tooltipFormatter="{b}: {c} bài báo ({d}%)" />
+          </div>
+        </Col>
 
-        <Grid item xs={12} md={6}>
-          <ScatterPlot title="Scatter Plot: Rank vs Ngày xuất bản" data={scatterData} />
-        </Grid>
-        
-        <Grid item xs={12} md={6}>
-          <StackedBarChart title="Stacked Bar Chart: Quốc gia vs Chủ đề" data={stackedBarData} />
-        </Grid>
+        <Col xs={24} md={12}>
+          <div className={styles.chart_container}>
+            <ScatterPlot title="Scatter Plot: Rank vs Ngày xuất bản" data={scatterData} />
+          </div>
+        </Col>
 
-        <Grid item xs={12} md={12}>
-          <HeatmapChart title="Heatmap: Bài báo theo tháng theo quốc gia" data={heatmapData} />
-        </Grid>
-      </Grid>
-    </Container>
+        <Col xs={24} md={12}>
+          <div className={styles.chart_container}>
+            <StackedBarChart title="Stacked Bar Chart: Quốc gia vs Chủ đề" data={stackedBarData} />
+          </div>
+        </Col>
+
+        <Col xs={24}>
+          <div className={styles.chart_container}>
+            <HeatmapChart title="Heatmap: Bài báo theo tháng theo quốc gia" data={heatmapData} />
+          </div>
+        </Col>
+      </Row>
+    </div>
   );
 };
 
