@@ -10,4 +10,4 @@ docker run --name {name_container} -dp {port}:{port_expose} {name_image}:{tag_im
 
 docker-compose up --build -d
 # Exec into mysql container
-docker exec -it news_scrapper-mysql_service-1 mysql -u {DB_USER} -p
+docker exec -it mysql_service mysql -u {DB_USER} -p

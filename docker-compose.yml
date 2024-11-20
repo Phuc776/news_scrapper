@@ -1,15 +1,17 @@
 services:
   mysql_service:
     build: ./mysql_database
+    image: mysql_service:v1
+    container_name: mysql_service
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_USER: ${DB_USER}
       MYSQL_DATABASE: ${DB_NAME}
     ports:
-      - "3307:3306"  
+      - "3307:3307"  
     healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      test: mysqladmin ping -h 127.0.0.1 -P 3307 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
       start_period: 5s
       interval: 5s
       timeout: 5s
@@ -17,11 +19,27 @@ services:
     networks:
       - app_network
     
-  data_ingestion_service:
-    build: ./data_ingestion
+  database_api_service:
+    build: ./database_api
+    image: database_api_service:v1
+    container_name: database_api_service
     depends_on:
       mysql_service:
         condition: service_healthy
+    environment:
+      PROJECT_NAME: ${PROJECT_NAME}
+      SQL_DATABASE_URL: ${SQL_DATABASE_URL}
+    ports:
+      - "8002:8002"
+    networks:
+      - app_network
+
+  data_ingestion_service:
+    build: ./data_ingestion
+    image: data_ingestion_service:v1
+    container_name: data_ingestion_service
+    depends_on:
+      - database_api_service
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
@@ -36,6 +54,10 @@ services:
 
   front_end_service:
     build: ./front-end/news
+    image: front_end_service:v1
+    depends_on:
+      - database_api_service
+    container_name: front_end_service
     ports:
       - "3000:3000" 
     networks:
