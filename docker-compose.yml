@@ -1,0 +1,46 @@
+services:
+  mysql_service:
+    build: ./mysql_database
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3307:3306"  
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 55
+    networks:
+      - app_network
+    
+  data_ingestion_service:
+    build: ./data_ingestion
+    depends_on:
+      mysql_service:
+        condition: service_healthy
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      API_KEY: ${API_KEY}
+    ports:
+      - "8001:8001"  
+    networks:
+      - app_network
+
+  front_end_service:
+    build: ./front-end/news
+    ports:
+      - "3000:3000" 
+    networks:
+      - app_network
+    
+networks:
+  app_network:
+    driver: bridge

@@ -7,3 +7,7 @@ docker run --name {name_container} -dp {port}:{port_expose} -e MYSQL_ROOT_PASSWO
 cd data_crawling
 docker build -t {name_image}:{tag_image} .
 docker run --name {name_container} -dp {port}:{port_expose} {name_image}:{tag_image}
+
+docker-compose up --build -d
+# Exec into mysql container
+docker exec -it news_scrapper-mysql_service-1 mysql -u {DB_USER} -p

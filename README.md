@@ -26,7 +26,7 @@ The data-crawling module fetches data from the [Newscatcher API](https://www.new
 ### 3. db-api (API Provider)
 The db-api module provides a set of RESTful APIs that allow external services to access the scraped news data. This service interacts with the MySQL database and provides APIs for fetching news articles, searching, and filtering.
 
-- **Technologies Used:** Python, Flask
+- **Technologies Used:** Python, FastAPI
 - **Main Functionality:**
   - Provide RESTful APIs to access news data
   - Search and filter news articles by title, date, or source
