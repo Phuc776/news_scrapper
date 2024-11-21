@@ -17,7 +17,7 @@ const StackedBarChart = ({ title, data }) => {
         text: title, 
         left: 'center', 
         top: '10px',
-        textStyle: { fontSize: 18, fontWeight: 'bold' } 
+        textStyle: { fontSize: 18, fontWeight: 'bold',color: '#273240' } 
     },
     tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
     legend: {
@@ -31,7 +31,7 @@ const StackedBarChart = ({ title, data }) => {
     series: seriesData.map((series, index) => ({
       ...series,
       itemStyle: {
-        color: ['#93CAE1', '#A1C8E6', '#B0D9F1', '#C8E6F8'][index % 4],
+        color: ['#4689F6', '#6B9FF8', '#90B3FA', '#B5C9FB'][index % 4],
       },
     })),
   };

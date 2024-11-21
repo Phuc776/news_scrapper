@@ -18,7 +18,7 @@ const HeatmapChart = ({ title, data }) => {
   });
 
   const options = {
-    title: { text: title, left: 'center' },
+    title: { text: title, left: 'center', textStyle: { color: '#273240' } },
     tooltip: { position: 'top' },
     xAxis: { type: 'category', data: countries, splitArea: { show: true } },
     yAxis: { type: 'category', data: months, splitArea: { show: true } },
@@ -30,7 +30,7 @@ const HeatmapChart = ({ title, data }) => {
       left: 'center',
       bottom: '15%',
       inRange: {
-        color: ['#DBF0F8', '#93CAE1', '#B0D9F1'],
+        color: ['#DBE2FD', '#6B9FF8', '#4689F6'],
       },
     },
     series: [

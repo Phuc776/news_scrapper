@@ -6,7 +6,7 @@ const LineChart = ({ title, xData, yData }) => {
     title: {
       text: title,
       left: 'center',
-      textStyle: { fontSize: 20, fontWeight: 'bold' },
+      textStyle: { fontSize: 20, fontWeight: 'bold', color: '#273240' },
     },
     tooltip: { trigger: 'axis', formatter: '{b}: Rank trung bình {c}' },
     xAxis: {
@@ -22,7 +22,7 @@ const LineChart = ({ title, xData, yData }) => {
         data: yData,
         smooth: true,
         itemStyle: {
-          color: '#93CAE1',
+          color: '#4689F6',
         },
       },
     ],

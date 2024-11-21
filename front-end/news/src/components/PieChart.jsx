@@ -7,7 +7,7 @@ const PieChart = ({ title, data, tooltipFormatter }) => {
     title: {
       text: title,
       left: 'center',
-      textStyle: { fontSize: 20, fontWeight: 'bold' },
+      textStyle: { fontSize: 20, fontWeight: 'bold', color: '#273240' },
     },
     tooltip: { trigger: 'item', formatter: tooltipFormatter },
     series: [
@@ -18,7 +18,7 @@ const PieChart = ({ title, data, tooltipFormatter }) => {
         label: { formatter: '{b}: {c}' },
         itemStyle: {
           color: function (params) {
-            const colors = ['#93CAE1', '#B0D9F1', '#C8E6F8', '#A1C8E6'];
+            const colors = ['#4689F6', '#6B9FF8', '#90B3FA', '#B5C9FB'];
             return colors[params.dataIndex % colors.length];
           },
         },

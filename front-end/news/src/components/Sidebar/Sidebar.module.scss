@@ -11,20 +11,21 @@
 
     .nav_list {
         list-style-type: none;
-        padding: 0;
+        padding: 0 16px;
         margin: 0;
         margin-top: 40px;
 
         .nav_item {
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             padding: 15px 20px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            border-radius: 2px;
+            border-radius: 12px;
 
             .icon {
-                color:#93CAE1;
+                color:#4689F6;
+                margin-bottom: 4px;
             }
 
             .nav_text {
@@ -34,15 +35,19 @@
                 font-weight: 400;
                 letter-spacing: 0.5px;
                 color: #273240;
+                margin-bottom: 2px;
             }
 
             &:hover {
-                background-color: #DBF0F8;
+                background-color: #D9E7FD;
             }
 
             &.active {
-                background-color: #DBF0F8;
-                font-weight: bold;
+                background-color: #D9E7FD;
+
+                .nav_text {
+                    font-weight: 700;
+                }
             }
         }
     }

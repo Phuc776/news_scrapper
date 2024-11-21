@@ -6,7 +6,7 @@ const BarChart = ({ title, xData, yData }) => {
       title: {
         text: title,
         left: 'center',
-        textStyle: { fontSize: 20, fontWeight: 'bold' },
+        textStyle: { fontSize: 20, fontWeight: 'bold', color: '#273240' },
       },
       tooltip: { trigger: 'axis', formatter: '{b}: {c} bài báo' },
       xAxis: {
@@ -23,7 +23,7 @@ const BarChart = ({ title, xData, yData }) => {
           barCategoryGap: '50%',
           itemStyle: {
             color: function (params) {
-              const colors = ['#93CAE1', '#B0D9F1', '#C8E6F8', '#A1C8E6', '#B2D8F0'];
+              const colors = ['#4689F6', '#6B9FF8', '#90B3FA', '#B5C9FB', '#DBE2FD'];
               return colors[params.dataIndex % colors.length];
             },
           },
