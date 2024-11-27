@@ -22,4 +22,4 @@ class ArticleSchema(BaseModel):
     twitter_account: Optional[str]
 
     class Config:
-        orm_mode = True
+        from_attributes = True

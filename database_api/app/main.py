@@ -1,6 +1,8 @@
 import logging
 
 import uvicorn
+import asyncio
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi_sqlalchemy import DBSessionMiddleware
 from starlette.middleware.cors import CORSMiddleware
@@ -10,13 +12,24 @@ from app.models import Base
 from app.db.base import engine
 from app.core.config import settings
 from app.helpers.exception_handler import CustomException, http_exception_handler
+from app.api.api_clustering import periodic_clustering
 
 logging.config.fileConfig(settings.LOGGING_CONFIG_FILE, disable_existing_loggers=False)
 Base.metadata.create_all(bind=engine)
 
-
 def get_application() -> FastAPI:
+    async def lifespan(app: FastAPI):
+        clustering_task = asyncio.create_task(periodic_clustering())
+        try:
+            yield
+        finally:
+            clustering_task.cancel()
+            try:
+                await clustering_task
+            except asyncio.CancelledError:
+                print("Clustering task is cancelled")
     application = FastAPI(
+        lifespan=lifespan,
         title=settings.PROJECT_NAME, docs_url="/docs", redoc_url='/re-docs',
         openapi_url=f"{settings.API_PREFIX}/openapi.json",
     )
@@ -33,7 +46,7 @@ def get_application() -> FastAPI:
 
     return application
 
-
 app = get_application()
+
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8002)

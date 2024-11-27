@@ -6,7 +6,7 @@ MAX_LENGTH_MODEL_FIELD = 255
 class Article(BareBaseModel):
     __tablename__ = 'news_articles'
 
-    title = Column(String(MAX_LENGTH_MODEL_FIELD))
+    title = Column(Text)
     author = Column(String(MAX_LENGTH_MODEL_FIELD))
     published_date = Column(DateTime)
     published_date_precision = Column(String(MAX_LENGTH_MODEL_FIELD))

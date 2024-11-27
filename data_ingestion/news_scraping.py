@@ -3,11 +3,11 @@ import mysql.connector
 from utils.logger import AppLog
 from utils.config import API_KEY
 from utils.utils import init_connection_sql
-import datetime
+from datetime import datetime
 
 def insert_to_db(articles):
     """Bulk insert news data into the MySQL database."""
-    AppLog.info(f"Start inserting {len(articles)} records to the database at {datetime.datetime.now()}.")
+    AppLog.info(f"Start inserting {len(articles)} records to the database at {datetime.now()}.")
     connection = init_connection_sql()
     if connection is None:
         AppLog.error("Error: Could not establish a MySQL connection.")
@@ -17,10 +17,11 @@ def insert_to_db(articles):
         cursor = connection.cursor()
         insert_query = """
             INSERT INTO news_articles (
-                title, author, published_date, published_date_precision, link, clean_url, excerpt, summary, rights, `rank_news`, topic, country, language, authors, media, is_opinion, twitter_account
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                title, author, published_date, published_date_precision, link, clean_url, excerpt, summary, rights, `rank_news`, topic, country, language, authors, media, is_opinion, twitter_account, created_at, updated_at
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
 
+        now = datetime.now()
         data_to_insert = [
             (
                 article.get('title'),
@@ -39,14 +40,16 @@ def insert_to_db(articles):
                 article.get('authors'),
                 article.get('media'),
                 article.get('is_opinion'),
-                article.get('twitter_account')
+                article.get('twitter_account'),
+                now,
+                now
             )
             for article in articles
         ]
 
         cursor.executemany(insert_query, data_to_insert)
         connection.commit()
-        AppLog.info(f"{cursor.rowcount} records inserted successfully at {datetime.datetime.now()}.")
+        AppLog.info(f"{cursor.rowcount} records inserted successfully at {datetime.now()}.")
 
     except mysql.connector.Error as error:
         AppLog.error(f"Failed to insert data into MySQL table: {error}")
