@@ -22,3 +22,7 @@ class ArticleService:
     @classmethod
     def get_all_topic(cls):
         return db.session.query(Article.topic).distinct().all()
+    
+    @classmethod
+    def get_all_country(cls):
+        return db.session.query(Article.country).distinct().all()

@@ -18,18 +18,18 @@ logging.config.fileConfig(settings.LOGGING_CONFIG_FILE, disable_existing_loggers
 Base.metadata.create_all(bind=engine)
 
 def get_application() -> FastAPI:
-    async def lifespan(app: FastAPI):
-        clustering_task = asyncio.create_task(periodic_clustering())
-        try:
-            yield
-        finally:
-            clustering_task.cancel()
-            try:
-                await clustering_task
-            except asyncio.CancelledError:
-                print("Clustering task is cancelled")
+    # async def lifespan(app: FastAPI):
+    #     clustering_task = asyncio.create_task(periodic_clustering())
+    #     try:
+    #         yield
+    #     finally:
+    #         clustering_task.cancel()
+    #         try:
+    #             await clustering_task
+    #         except asyncio.CancelledError:
+    #             print("Clustering task is cancelled")
     application = FastAPI(
-        lifespan=lifespan,
+        # lifespan=lifespan,
         title=settings.PROJECT_NAME, docs_url="/docs", redoc_url='/re-docs',
         openapi_url=f"{settings.API_PREFIX}/openapi.json",
     )

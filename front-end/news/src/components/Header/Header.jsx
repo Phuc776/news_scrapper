@@ -6,13 +6,8 @@ import styles from './Header.module.scss';
 import { IconBellRinging, IconLogout } from '@tabler/icons-react';
 
 const { Header } = Layout;
-const { Search } = Input;
 
 const AppHeader = () => {
-
-    const onSearch = (value) => {
-        console.log('Tìm kiếm:', value);
-    };
 
     return (
         <Header className={styles.header_container}>
@@ -23,12 +18,7 @@ const AppHeader = () => {
                 />
             </div>
 
-            <Search
-                placeholder="Tìm kiếm..."
-                onSearch={onSearch}
-                style={{ width: '300px' }}
-                allowClear
-            />
+            <h1>News Analytics</h1>
 
             <div className={styles.user_actions}>
                 <IconBellRinging size={24}/>

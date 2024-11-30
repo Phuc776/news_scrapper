@@ -7,7 +7,7 @@ const PieChart = ({ title, data, tooltipFormatter }) => {
     title: {
       text: title,
       left: 'center',
-      textStyle: { fontSize: 20, fontWeight: 'bold', color: '#273240' },
+      textStyle: { fontSize: 22, fontWeight: 'bold', color: '#273240' },
     },
     tooltip: { trigger: 'item', formatter: tooltipFormatter },
     series: [
