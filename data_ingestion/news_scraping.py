@@ -80,5 +80,6 @@ def get_raw_data():
 
 if __name__ == "__main__":
     while True:
-        articles_data = get_raw_data()
-        insert_to_db(articles_data)
+        for i in range(10):
+            articles_data = get_raw_data()
+            insert_to_db(articles_data)

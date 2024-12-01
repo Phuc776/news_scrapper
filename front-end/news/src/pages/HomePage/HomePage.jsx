@@ -76,7 +76,7 @@ const HomePage = () => {
         fetch(topicUrl)
             .then(response => response.json())
             .then(data => {
-                setDataCountries(data);
+                setdataTopics(data);
             })
             .catch(error => console.error('Error loading topic data:', error));
     };

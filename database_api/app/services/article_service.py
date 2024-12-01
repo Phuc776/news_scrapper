@@ -12,10 +12,8 @@ class ArticleService:
             filters.append(Article.topic == topic)
         if country:
             filters.append(Article.country == country)
-        if start_date:
-            filters.append(Article.published_date >= start_date)
-        if end_date:
-            filters.append(Article.published_date <= end_date)
+        if start_date and end_date:
+            filters.append(and_(Article.published_date >= start_date, Article.published_date <= end_date))
         
         return db.session.query(Article).filter(and_(*filters))
     

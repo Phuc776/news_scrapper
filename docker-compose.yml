@@ -16,6 +16,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 55
+    volumes:
+      - mysql_data:/var/lib/mysql
     networks:
       - app_network
     
@@ -65,7 +67,7 @@ services:
     networks:
       - app_network
     env_file:
-      - .env.production
+      - .env
 
   clustering_service:
     build: ./clustering
@@ -82,7 +84,11 @@ services:
       DB_NAME: ${DB_NAME}
     networks:
       - app_network
-    
+      
+volumes:
+  mysql_data:
+    driver: local
+
 networks:
   app_network:
     driver: bridge

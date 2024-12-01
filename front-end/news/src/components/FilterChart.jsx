@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DatePicker, Select, Space } from 'antd';
+import { use } from 'echarts';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -9,6 +10,14 @@ const DEFAULT_VALUE = 'Tất cả';
 const FilterChart = ({ topics, onFilterChange }) => {
   const [selectedTopic, setSelectedTopic] = useState(DEFAULT_VALUE);
   const [selectedDates, setSelectedDates] = useState(["", ""]);
+  
+  useEffect(() => {
+    onFilterChange({
+      topic: selectedTopic === DEFAULT_VALUE ? '' : selectedTopic,
+      startDate: selectedDates ? selectedDates[0] : "",
+      endDate: selectedDates ? selectedDates[1] : "",
+    });
+  }, []);
 
   const handleTopicChange = (value) => {
     setSelectedTopic(value);
