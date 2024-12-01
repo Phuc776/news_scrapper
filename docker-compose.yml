@@ -62,6 +62,22 @@ services:
       - "3000:3000" 
     networks:
       - app_network
+
+  clustering_service:
+    build: ./clustering
+    image: clustering_service:v1
+    container_name: clustering_service
+    depends_on:
+      - mysql_service
+      - database_api_service
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    networks:
+      - app_network
     
 networks:
   app_network:

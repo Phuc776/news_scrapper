@@ -1,10 +1,11 @@
 import React from 'react';
-import { Layout, Input, Avatar, Image } from 'antd';
+import { Layout, Avatar, Image } from 'antd';
 import avatar from '../../assets/avatar.png';
 import logo from '../../assets/logo.png';
 import styles from './Header.module.scss';
-import { IconBellRinging, IconLogout } from '@tabler/icons-react';
-
+import { FaBeer } from 'react-icons/fa';
+import { MdLogout } from "react-icons/md";
+import { IoMdNotificationsOutline } from "react-icons/io";
 const { Header } = Layout;
 
 const AppHeader = () => {
@@ -21,14 +22,14 @@ const AppHeader = () => {
             <h1>News Analytics</h1>
 
             <div className={styles.user_actions}>
-                <IconBellRinging size={24}/>
+                <IoMdNotificationsOutline size={24}/>
                 <Avatar
                     size="large"
                     src={avatar}
                     alt="User Avatar"
                 />
                 <p className={styles.name}>Vitamin DataMining</p>
-                <IconLogout size={24}/>
+                <MdLogout size={24}/>
             </div>
         </Header>
     );

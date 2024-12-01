@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Dashboard.module.scss';
 import { Row, Col } from 'antd';
 import FilterChart from '../components/FilterChart';
@@ -6,28 +6,44 @@ import BarChart from '../components/BarChart';
 import PieChart from '../components/PieChart';
 
 const Dashboard = ({ topics, dataTopics, dataCountries, handleFilterDataChange }) => {
-  const totalNewsCount = dataTopics.reduce((total, topic) => total + topic.value, 0);
+  const [filteredDataTopics, setFilteredDataTopics] = useState(dataTopics);
+
+  useEffect(() => {
+    setFilteredDataTopics(dataTopics);
+  }, [dataTopics]);
+
+  const totalNewsCount = filteredDataTopics.reduce((total, topic) => total + topic.value, 0);
 
   const handleFilterChange = ({ topic, startDate, endDate }) => {
-    console.log(topic, startDate, endDate)
-    if (startDate && endDate){
+    console.log(topic, startDate, endDate);
+  
+    if (startDate && endDate) {
       const formatDate = (date) => {
-          if (!date) return null; // Trả về null nếu không có giá trị
-          const d = new Date(date);
-          return d.toISOString().split('T')[0]; // Định dạng YYYY-MM-DD
+        if (!date) return null;
+        const d = new Date(date);
+        return d.toISOString().split('T')[0]; 
       };
-
+  
       const formattedStartDate = formatDate(startDate);
       const formattedEndDate = formatDate(endDate);
       handleFilterDataChange(topic, formattedStartDate, formattedEndDate);
+  
+      const filtered = dataTopics.filter(item => {
+        const isTopicMatch = !topic || item.name === topic;
+        const isDateInRange = (!startDate || item.date >= startDate) && 
+                              (!endDate || item.date <= endDate);
+        return isTopicMatch && isDateInRange;
+      });
+  
+      setFilteredDataTopics(filtered);
+    } else {
+      setFilteredDataTopics(dataTopics); 
+      handleFilterDataChange(topic); 
     }
-        
-    else handleFilterDataChange(topic);
   };
 
   const barXData = dataCountries.map(item => item.name);
   const barYData = dataCountries.map(item => item.value);
-
 
   return (
     <div className={styles.dashboard_container} style={{'marginTop': '48px'}}>
@@ -40,7 +56,7 @@ const Dashboard = ({ topics, dataTopics, dataCountries, handleFilterDataChange }
         </Col>
         <Col xs={24} md={12} style={{'position': 'relative'}}>
           <div className={styles.chart_container}>
-            <PieChart title="Số Lượng Bài Báo Theo Topic" data={dataTopics} tooltipFormatter="{b}: {c} bài báo ({d}%)" />
+            <PieChart title="Số Lượng Bài Báo Theo Topic" data={filteredDataTopics} tooltipFormatter="{b}: {c} bài báo ({d}%)" />
           </div>
           <div style={{
             'position': 'absolute', 

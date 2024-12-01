@@ -1,20 +1,20 @@
 import React from 'react';
 import ReactEcharts from 'echarts-for-react';
 
-const BarChart = ({ title, xData, yData }) => {
+const BarChart = ({ title, xData, yData, name = 'bài báo' }) => {
     const options = {
       title: {
         text: title,
         left: 'center',
         textStyle: { fontSize: 20, fontWeight: 'bold', color: '#273240' },
       },
-      tooltip: { trigger: 'axis', formatter: '{b}: {c} bài báo' },
+      tooltip: { trigger: 'axis', formatter: `{b}: {c} ${name}` },
       xAxis: {
         type: 'category',
         data: xData,
         axisLabel: { rotate: 45 },
       },
-      yAxis: { type: 'value', name: 'Số lượng' },
+      yAxis: { type: 'value', name: name },
       series: [
         {
           type: 'bar',

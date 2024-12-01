@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import Dashboard from './components/Dashboard';
+import React from 'react';
 import HomePage from './pages/HomePage/HomePage';
-import styles from './App.module.scss';
 
 function App() {
   return (

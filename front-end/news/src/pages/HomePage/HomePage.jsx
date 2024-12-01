@@ -4,6 +4,7 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import AppHeader from '../../components/Header/Header';
 import styles from './HomePage.module.scss';
 import Dashboard from '../../components/Dashboard';
+import Clustering from '../../components/Clustering';
 
 const { Content } = Layout;
 const API_URL = import.meta.env.VITE_API_URL;
@@ -11,10 +12,10 @@ const API_URL = import.meta.env.VITE_API_URL;
 const HomePage = () => {
 
     const [activeItem, setActiveItem] = useState('dashboard');
-    const [data, setData] = useState([]);
     const [topics, setTopics] = useState([]);
     const [dataTopics, setdataTopics] = useState([]);
     const [dataCountries, setDataCountries] = useState([]);
+    const [clusterData, setClusterData] = useState([]);
     
   
     useEffect(() => {
@@ -40,6 +41,13 @@ const HomePage = () => {
                     'Tất cả', 
                     ...data.topics
                 ])
+            })
+            .catch(error => console.error('Error loading data:', error));
+
+        fetch(`${API_URL}/clustering/keywords`)
+            .then(response => response.json())
+            .then(data => {
+                setClusterData(data)
             })
             .catch(error => console.error('Error loading data:', error));
     }, []);
@@ -82,7 +90,7 @@ const HomePage = () => {
             case 'dashboard':
                 return <Dashboard topics={topics} dataCountries={dataCountries} dataTopics={dataTopics} handleFilterDataChange={handleFilterDataChange} />;
             case 'documents':
-                return <div>Documents Content</div>;
+                return <Clustering data={clusterData} />;
             case 'settings':
                 return <div>Settings Content</div>;
             default:
