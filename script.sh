@@ -8,6 +8,7 @@ cd data_crawling
 docker build -t {name_image}:{tag_image} .
 docker run --name {name_container} -dp {port}:{port_expose} {name_image}:{tag_image}
 
+docker-compose down
 docker-compose up --build -d
 # Exec into mysql container
 docker exec -it mysql_service mysql -u {DB_USER} -p

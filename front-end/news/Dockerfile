@@ -1,5 +1,7 @@
 FROM node:18-alpine
 
+ENV VITE_API_URL=${VITE_API_URL}
+
 WORKDIR /app
 
 COPY package.json .

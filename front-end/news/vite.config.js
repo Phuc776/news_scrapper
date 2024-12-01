@@ -5,14 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: "/",
   plugins: [react()],
-  preview: {
-    port: 3000,
-    strictPort: true,
-  },
   server: {
-    port: 3000,
-    strictPort: true,
-    host: true,
-    origin: "http://0.0.0.0:3000",
+    proxy: {
+      '/api': 'http://database_api_service:8002', // Đảm bảo proxy yêu cầu đến đúng backend
+    },
   },
 })

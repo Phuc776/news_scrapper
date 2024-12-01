@@ -28,8 +28,8 @@ CREATE TABLE news_articles (
 CREATE TABLE clustering_results (
     id INT AUTO_INCREMENT PRIMARY KEY,
     cluster_name VARCHAR(255),
-    keywords VARCHAR(255),
-    weights VARCHAR(255),
+    keywords TEXT,
+    weights TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

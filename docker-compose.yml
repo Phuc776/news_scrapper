@@ -58,10 +58,14 @@ services:
     depends_on:
       - database_api_service
     container_name: front_end_service
+    environment:
+      VITE_API_URL: ${VITE_API_URL}
     ports:
       - "3000:3000" 
     networks:
       - app_network
+    env_file:
+      - .env.production
 
   clustering_service:
     build: ./clustering
