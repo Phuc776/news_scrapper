@@ -1,5 +1,11 @@
 import requests
 import mysql.connector
+from nltk.stem import WordNetLemmatizer
+import nltk
+import re
+from nltk.corpus import stopwords
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
 from utils.logger import AppLog
 from utils.config import API_KEY
 from utils.utils import init_connection_sql
@@ -78,8 +84,42 @@ def get_raw_data():
         # Save the results to a file
         return response.json().get("articles", [])
 
+
+def preprocess_text(text):
+    """Preprocess the text data by removing special characters, stopwords, and lemmatizing the words."""
+    lemmatizer = WordNetLemmatizer()
+    stop_words = set(stopwords.words('english'))
+
+    text = text.lower()  # Convert to lowercase
+    text = re.sub(r'[^a-z\s]', '', text)  # Remove special characters
+    words = nltk.word_tokenize(text)  # Tokenize
+    words = [lemmatizer.lemmatize(word) for word in words if word not in stop_words]
+    return ' '.join(words)
+
+valid_labels = {'sport', 'tech', 'world', 'finance', 'politics', 'business',
+                'economics', 'entertainment', 'beauty', 'travel', 'music',
+                'food', 'science', 'gaming', 'energy'}
+vectorizer = TfidfVectorizer(max_features=5000)
+classifier = MultinomialNB()
+
+def label_topic(articles):
+    """Label the topic of each article based on the content."""
+    for article in articles:
+        title = article.get('title', '')
+        summary = article.get('summary', '')
+        combined_text = title + ' ' + summary
+        cleaned_text = preprocess_text(combined_text)
+        
+        article['combined_text_processed'] = cleaned_text
+
+        if article.get('topic') not in valid_labels:
+            X = vectorizer.transform([combined_text])
+            predicted_topic = classifier.predict(X)[0]
+            article['topic'] = predicted_topic
+
 if __name__ == "__main__":
     while True:
         for i in range(10):
             articles_data = get_raw_data()
+            label_topic(articles_data)
             insert_to_db(articles_data)

@@ -21,6 +21,14 @@ CREATE TABLE news_articles (
     media TEXT,
     is_opinion BOOLEAN,
     twitter_account VARCHAR(50),
+    processed_text TEXT,
+    sentiment_score FLOAT,
+    sentiment_category INT, -- 1: very negative, 2: negative, 3: neutral, 4: positive, 5: very positive
+    author_freq FLOAT,
+    clean_url_freq FLOAT,
+    country_freq FLOAT,
+    twitter_account_freq FLOAT, 
+    -- frequency encoded data
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
