@@ -1,0 +1,67 @@
+{
+    "correlation_matrix": {
+        "rank": {
+            "rank": 1.0,
+            "sentiment_score": 0.04315819022180269,
+            "sentiment_category": 0.04168683566954867,
+            "author_freq": 0.04875110430791016,
+            "clean_url_freq": -0.1826491929148578,
+            "country_freq": -0.0632532407627729,
+            "twitter_account_freq": -0.20601890632026126
+        },
+        "sentiment_score": {
+            "rank": 0.04315819022180269,
+            "sentiment_score": 1.0,
+            "sentiment_category": 0.9909840413491676,
+            "author_freq": -0.05235840937224247,
+            "clean_url_freq": -0.10554842165297791,
+            "country_freq": 0.027807350970620044,
+            "twitter_account_freq": -0.11012757343777288
+        },
+        "sentiment_category": {
+            "rank": 0.04168683566954867,
+            "sentiment_score": 0.9909840413491676,
+            "sentiment_category": 1.0,
+            "author_freq": -0.04908208881885779,
+            "clean_url_freq": -0.09898544592179657,
+            "country_freq": 0.03046463698608611,
+            "twitter_account_freq": -0.1022463510173744
+        },
+        "author_freq": {
+            "rank": 0.04875110430791016,
+            "sentiment_score": -0.05235840937224247,
+            "sentiment_category": -0.04908208881885779,
+            "author_freq": 1.0,
+            "clean_url_freq": -0.13046178480381967,
+            "country_freq": -0.08051837394419924,
+            "twitter_account_freq": -0.1231367134944308
+        },
+        "clean_url_freq": {
+            "rank": -0.1826491929148578,
+            "sentiment_score": -0.10554842165297791,
+            "sentiment_category": -0.09898544592179657,
+            "author_freq": -0.13046178480381967,
+            "clean_url_freq": 1.0,
+            "country_freq": 0.17668936793440124,
+            "twitter_account_freq": 0.9573735488391705
+        },
+        "country_freq": {
+            "rank": -0.0632532407627729,
+            "sentiment_score": 0.027807350970620044,
+            "sentiment_category": 0.03046463698608611,
+            "author_freq": -0.08051837394419924,
+            "clean_url_freq": 0.17668936793440124,
+            "country_freq": 1.0,
+            "twitter_account_freq": 0.1447137766686747
+        },
+        "twitter_account_freq": {
+            "rank": -0.20601890632026126,
+            "sentiment_score": -0.11012757343777288,
+            "sentiment_category": -0.1022463510173744,
+            "author_freq": -0.1231367134944308,
+            "clean_url_freq": 0.9573735488391705,
+            "country_freq": 0.1447137766686747,
+            "twitter_account_freq": 1.0
+        }
+    }
+}

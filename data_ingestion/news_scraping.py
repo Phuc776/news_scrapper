@@ -102,6 +102,20 @@ valid_labels = {'sport', 'tech', 'world', 'finance', 'politics', 'business',
 vectorizer = TfidfVectorizer(max_features=5000)
 classifier = MultinomialNB()
 
+def train_classifier(article_data):
+    """Train a classifier to predict the topic of the article."""
+    valid_articles = [article for article in article_data if article.get('topic') in valid_labels]
+    if not valid_articles:
+        return
+    
+    combined_texts = [preprocess_text(article.get('title', '') + ' ' + article.get('summary', '')) for article in valid_articles]
+    topics = [article.get('topic') for article in valid_articles]
+    
+    X_train = vectorizer.fit_transform(combined_texts)
+    classifier.fit(X_train, topics)
+    AppLog.info("Classifier trained successfully with valid labeled data.")
+
+
 def label_topic(articles):
     """Label the topic of each article based on the content."""
     for article in articles:
@@ -113,13 +127,14 @@ def label_topic(articles):
         article['combined_text_processed'] = cleaned_text
 
         if article.get('topic') not in valid_labels:
-            X = vectorizer.transform([combined_text])
-            predicted_topic = classifier.predict(X)[0]
+            X_missing = vectorizer.transform([combined_text])
+            predicted_topic = classifier.predict(X_missing)[0]
             article['topic'] = predicted_topic
 
 if __name__ == "__main__":
     while True:
         for i in range(10):
             articles_data = get_raw_data()
+            train_classifier(articles_data)
             label_topic(articles_data)
             insert_to_db(articles_data)

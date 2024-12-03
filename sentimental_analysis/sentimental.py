@@ -11,16 +11,27 @@ class SentimentalAnalysis:
         """
         self.data_json = data_json
 
-    def analyze(self):
+    def preprocess_and_analyze(self):
         """
-        Analyze sentiment on the given data and categorize sentiment scores.
+        Perform sentiment analysis and frequency encoding on the data.
         """
         df = pd.DataFrame(self.data_json)
         if df.empty:
             raise ValueError("No valid documents to perform sentiment analysis.")
         
+        df['author'] = df['author'].fillna('Unknown')
+        df['clean_url'] = df['clean_url'].fillna('Unknown')
+        df['country'] = df['country'].fillna('Unknown')
+        df['twitter_account'] = df['twitter_account'].fillna('Unknown')
+
+        df['author_freq'] = df['author'].map(df['author'].value_counts())
+        df['clean_url_freq'] = df['clean_url'].map(df['clean_url'].value_counts())
+        df['country_freq'] = df['country'].map(df['country'].value_counts())
+        df['twitter_account_freq'] = df['twitter_account'].map(df['twitter_account'].value_counts())
+
+        # Sentiment analysis
         analyzer = SentimentIntensityAnalyzer()
-        df['combined_text'] = df['title'] + ' ' + df['summary'] + ' ' + df['author']
+        df['combined_text'] = df['title'] + ' ' + df['summary']
         df['sentiment_score'] = df['combined_text'].apply(lambda x: analyzer.polarity_scores(x)['compound'])
 
         def sentiment_category(score):
@@ -60,13 +71,18 @@ class SentimentalAnalysis:
                 WHERE id = %s
             """
 
+            processed_data = self.preprocess_data()
+            # Ensure `id` exists in the processed data for database updates
+            if 'id' not in processed_data.columns:
+                raise ValueError("Missing 'id' column in the data for database updates.")
+
             data_to_update = [
                 (
                     row['processed_text'], row['sentiment_score'], row['sentiment_category'],
                     row['author_freq'], row['clean_url_freq'], row['country_freq'], row['twitter_account_freq'],
                     row['id']
                 )
-                for _, row in self.analyze().iterrows()
+                for _, row in processed_data.iterrows()
             ]
 
             cursor.executemany(update_query, data_to_update)
