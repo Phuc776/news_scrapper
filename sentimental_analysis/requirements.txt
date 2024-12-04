@@ -1,9 +1,7 @@
 python-dotenv
 requests
-logging
 mysql-connector-python
 schedule
 pandas
 vaderSentiment
 scikit-learn
-datetime

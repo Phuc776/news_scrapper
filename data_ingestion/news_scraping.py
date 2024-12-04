@@ -1,11 +1,5 @@
 import requests
 import mysql.connector
-from nltk.stem import WordNetLemmatizer
-import nltk
-import re
-from nltk.corpus import stopwords
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import MultinomialNB
 from utils.logger import AppLog
 from utils.config import API_KEY
 from utils.utils import init_connection_sql
@@ -65,12 +59,12 @@ def insert_to_db(articles):
             cursor.close()
             connection.close()
 
-def get_raw_data():
+def get_raw_data(page=1):
     """Get raw data from the Newscatcher API."""
     url = "https://api.newscatcherapi.com/v2/search"
 
     # You can customize the query parameter (e.g., "technology" or "sports")
-    querystring = {"q":"*", "lang":"en", "sort_by":"date", "page_size": 100, "page": 1, "from_rank": 1, "to_rank": 10000}
+    querystring = {"q":"*", "lang":"en", "sort_by":"date", "page_size": 100, "page": page, "from_rank": 1, "to_rank": 10000}
 
     headers = {
         'x-api-key': API_KEY
@@ -84,57 +78,6 @@ def get_raw_data():
         # Save the results to a file
         return response.json().get("articles", [])
 
-
-def preprocess_text(text):
-    """Preprocess the text data by removing special characters, stopwords, and lemmatizing the words."""
-    lemmatizer = WordNetLemmatizer()
-    stop_words = set(stopwords.words('english'))
-
-    text = text.lower()  # Convert to lowercase
-    text = re.sub(r'[^a-z\s]', '', text)  # Remove special characters
-    words = nltk.word_tokenize(text)  # Tokenize
-    words = [lemmatizer.lemmatize(word) for word in words if word not in stop_words]
-    return ' '.join(words)
-
-valid_labels = {'sport', 'tech', 'world', 'finance', 'politics', 'business',
-                'economics', 'entertainment', 'beauty', 'travel', 'music',
-                'food', 'science', 'gaming', 'energy'}
-vectorizer = TfidfVectorizer(max_features=5000)
-classifier = MultinomialNB()
-
-def train_classifier(article_data):
-    """Train a classifier to predict the topic of the article."""
-    valid_articles = [article for article in article_data if article.get('topic') in valid_labels]
-    if not valid_articles:
-        return
-    
-    combined_texts = [preprocess_text(article.get('title', '') + ' ' + article.get('summary', '')) for article in valid_articles]
-    topics = [article.get('topic') for article in valid_articles]
-    
-    X_train = vectorizer.fit_transform(combined_texts)
-    classifier.fit(X_train, topics)
-    AppLog.info("Classifier trained successfully with valid labeled data.")
-
-
-def label_topic(articles):
-    """Label the topic of each article based on the content."""
-    for article in articles:
-        title = article.get('title', '')
-        summary = article.get('summary', '')
-        combined_text = title + ' ' + summary
-        cleaned_text = preprocess_text(combined_text)
-        
-        article['combined_text_processed'] = cleaned_text
-
-        if article.get('topic') not in valid_labels:
-            X_missing = vectorizer.transform([combined_text])
-            predicted_topic = classifier.predict(X_missing)[0]
-            article['topic'] = predicted_topic
-
 if __name__ == "__main__":
-    while True:
-        for i in range(10):
-            articles_data = get_raw_data()
-            train_classifier(articles_data)
-            label_topic(articles_data)
-            insert_to_db(articles_data)
+    articles_data = get_raw_data()
+    insert_to_db(articles_data)
