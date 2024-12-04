@@ -3,3 +3,5 @@
 from app.models.model_base import Base  # noqa
 from app.models.article import Article  # noqa
 from app.models.clustering import ClusteringResult  # noqa
+from app.models.sentimental import SentimentSummary  # noqa
+from app.models.correlation import CorrelationData  # noqa

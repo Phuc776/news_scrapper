@@ -4,6 +4,8 @@ from utils.logger import AppLog
 from datetime import datetime
 from utils.utils import init_connection_sql
 import json
+import nltk
+nltk.download('vader_lexicon')
 
 class SentimentalAnalysis:
     def __init__(self, data_json):
@@ -149,13 +151,15 @@ class SentimentalAnalysis:
             sentiment_summary = processed_data.groupby('topic')['sentiment_category'].agg(['mean', 'count']).reset_index()
             
             cursor = connection.cursor()
+
+            # Delete all existing records
+            delete_query = "DELETE FROM sentiment_summary"
+            cursor.execute(delete_query)
+
+            # Insert new records
             insert_query = """
-                INSERT INTO sentiment_summary (topic, avg_sentiment_score, article_count)
-                VALUES (%s, %s, %s)
-                ON DUPLICATE KEY UPDATE
-                avg_sentiment_score = VALUES(avg_sentiment_score),
-                article_count = VALUES(article_count),
-                updated_at = NOW()
+                INSERT INTO sentiment_summary (topic, avg_sentiment_score, article_count, created_at, updated_at)
+                VALUES (%s, %s, %s, NOW(), NOW())
             """
             
             data_to_insert = [
@@ -194,6 +198,7 @@ def run_sentiment_analysis():
 
         analyzer = SentimentalAnalysis(data)
         processed_data = analyzer.preprocess_and_analyze()
+        analyzer.save_summary_result(processed_data)
         analyzer.save_result(processed_data)
         analyzer.calculate_and_save_correlation()
 
@@ -207,4 +212,4 @@ def run_sentiment_analysis():
 
 
 if __name__ == "__main__":
-    pass  
+    run_sentiment_analysis()  

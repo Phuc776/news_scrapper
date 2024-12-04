@@ -8,7 +8,7 @@ async def crawl_data():
     """Crawl data from news websites and insert to database"""
     for i in range(10):
         try:
-            articles_data = get_raw_data(page=i)  # Assuming get_raw_data is an async function
+            articles_data = get_raw_data(page=i+1)  # Assuming get_raw_data is an async function
             insert_to_db(articles_data)  # Assuming insert_to_db is an async function
             AppLog.info(f"Successfully inserted batch {i+1} of articles.")
         except Exception as e:

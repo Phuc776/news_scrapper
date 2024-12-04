@@ -141,11 +141,14 @@ def run_clustering():
     try:
         cursor = connection.cursor(dictionary=True)
         query = """
-            SELECT title, summary, author
-            FROM news_articles
-            WHERE title IS NOT NULL AND summary IS NOT NULL AND author IS NOT NULL
-            LIMIT 1000;
-        """
+                SELECT id, title, summary, author
+                FROM news_articles
+                WHERE title IS NOT NULL 
+                  AND summary IS NOT NULL 
+                  AND author IS NOT NULL 
+                  AND is_clustered = 0
+                LIMIT 1000;
+            """
         cursor.execute(query)
         data_json = cursor.fetchall()
         cursor.close()
@@ -156,6 +159,16 @@ def run_clustering():
 
         clustering = TextClustering(data_json)
         clustering.save_clustered_data()
+
+        processed_ids = [record['id'] for record in data_json]
+
+        # Update the is_clustered field for the processed records
+        update_query = """
+            UPDATE news_articles
+            SET is_clustered = 1
+            WHERE id IN (%s)
+        """ % ','.join(['%s'] * len(processed_ids))
+        cursor.execute(update_query, processed_ids)
 
     except Exception as e:
         AppLog.error(f"Error fetching data: {e}")

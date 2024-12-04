@@ -28,6 +28,7 @@ CREATE TABLE news_articles (
     clean_url_freq FLOAT,
     country_freq FLOAT,
     twitter_account_freq FLOAT, 
+    is_clustered BOOLEAN DEFAULT FALSE,
     -- frequency encoded data
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -44,7 +45,9 @@ CREATE TABLE clustering_results (
 
 CREATE TABLE correlation_data (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    correlation_data JSON
+    correlation_data JSON,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS sentiment_summary (

@@ -1,8 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
 from app.services import ArticleService
-from app.schemas import ArticleSchema
-from app.models import Article
-from app.helpers.paging import Page, PaginationParams, paginate
 from datetime import datetime
 
 router = APIRouter()

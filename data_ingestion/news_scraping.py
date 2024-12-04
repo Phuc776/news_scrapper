@@ -79,5 +79,10 @@ def get_raw_data(page=1):
         return response.json().get("articles", [])
 
 if __name__ == "__main__":
-    articles_data = get_raw_data()
-    insert_to_db(articles_data)
+    for i in range(10):
+        try:
+            articles_data = get_raw_data(page=i+1)  # Assuming get_raw_data is an async function
+            insert_to_db(articles_data)  # Assuming insert_to_db is an async function
+            AppLog.info(f"Successfully inserted batch {i+1} of articles.")
+        except Exception as e:
+            AppLog.error(f"Error occurred while processing batch {i+1}: {e}")

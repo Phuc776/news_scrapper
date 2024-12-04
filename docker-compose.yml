@@ -84,6 +84,22 @@ services:
       DB_NAME: ${DB_NAME}
     networks:
       - app_network
+
+  sentiment_analysis_service:
+    build: ./sentimental_analysis
+    image: sentimental_analysis_service:v1
+    container_name: sentimental_analysis_service
+    depends_on:
+      - mysql_service
+      - database_api_service
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    networks:
+      - app_network
       
 volumes:
   mysql_data:

@@ -1,1 +1,2 @@
 from app.services.article_service import ArticleService
+from app.services.sentimental_service import SentimentalService

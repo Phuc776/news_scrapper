@@ -1,7 +1,7 @@
 import time
 import schedule
 from utils.logger import AppLog
-from sentimental_analysis.sentimental import run_sentiment_analysis
+from sentimental import run_sentiment_analysis
 
 def job():
     AppLog.info("Running scheduled sentiment analysis task...")
