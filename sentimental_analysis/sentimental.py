@@ -3,6 +3,7 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 from utils.logger import AppLog
 from datetime import datetime
 from utils.utils import init_connection_sql
+import json
 
 class SentimentalAnalysis:
     def __init__(self, data_json):
