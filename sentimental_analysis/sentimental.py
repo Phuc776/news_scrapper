@@ -20,6 +20,7 @@ class SentimentalAnalysis:
             raise ValueError("No valid documents to perform sentiment analysis.")
         
         df['author'] = df['author'].fillna('Unknown')
+        df['author'] = df['author'].replace('', 'Unknown')
         df['clean_url'] = df['clean_url'].fillna('Unknown')
         df['country'] = df['country'].fillna('Unknown')
         df['twitter_account'] = df['twitter_account'].fillna('Unknown')
@@ -47,11 +48,9 @@ class SentimentalAnalysis:
                 return 1  # Very negative
 
         df['sentiment_category'] = df['sentiment_score'].apply(sentiment_category)
-        
-        # Assuming frequency encoding is already performed outside of this class
         return df
 
-    def save_result(self):
+    def save_result(self, processed_data):
         """
         Save the sentiment analysis results to the `news_articles` table in MySQL.
         """
@@ -71,14 +70,9 @@ class SentimentalAnalysis:
                 WHERE id = %s
             """
 
-            processed_data = self.preprocess_data()
-            # Ensure `id` exists in the processed data for database updates
-            if 'id' not in processed_data.columns:
-                raise ValueError("Missing 'id' column in the data for database updates.")
-
             data_to_update = [
                 (
-                    row['processed_text'], row['sentiment_score'], row['sentiment_category'],
+                    row['combined_text'], row['sentiment_score'], row['sentiment_category'],
                     row['author_freq'], row['clean_url_freq'], row['country_freq'], row['twitter_account_freq'],
                     row['id']
                 )
@@ -98,5 +92,118 @@ class SentimentalAnalysis:
                 cursor.close()
                 connection.close()
 
+    def calculate_and_save_correlation(self):
+        """
+        Calculate correlation for numeric columns and save the result as JSON.
+        """
+        connection = init_connection_sql()
+        if connection is None:
+            AppLog.error("Error: Could not establish a MySQL connection.")
+            return
+
+        try:
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute("SELECT rank_news, sentiment_score, sentiment_category, author_freq, clean_url_freq, country_freq, twitter_account_freq FROM news_articles")
+            data = cursor.fetchall()
+
+            if not data:
+                AppLog.info("No data available for correlation calculation.")
+                return
+
+            # Create a DataFrame and compute correlation
+            df = pd.DataFrame(data)
+            correlation_matrix = df.corr()
+
+            # Convert correlation matrix to a nested JSON format
+            correlation_dict = correlation_matrix.to_dict()
+            correlation_json = json.dumps({"correlation_matrix": correlation_dict}, indent=4)
+
+            # Save to the `correlation_data` table
+            insert_query = "INSERT INTO correlation_data (correlation_data) VALUES (%s)"
+            cursor.execute(insert_query, (correlation_json,))
+            connection.commit()
+
+            AppLog.info("Correlation data saved successfully.")
+        
+        except Exception as e:
+            AppLog.error(f"Failed to calculate or save correlation data: {e}")
+            connection.rollback()
+        
+        finally:
+            if connection.is_connected():
+                cursor.close()
+                connection.close()
+    def save_summary_result(self, processed_data):
+        """
+        Group data by topic and save average sentiment score and article count.
+        """
+        AppLog.info("Start saving sentiment summary to the database.")
+        connection = init_connection_sql()
+        if connection is None:
+            AppLog.error("Error: Could not establish a MySQL connection.")
+            return
+        
+        try:
+            # Group by topic to calculate mean sentiment score and count
+            sentiment_summary = processed_data.groupby('topic')['sentiment_category'].agg(['mean', 'count']).reset_index()
+            
+            cursor = connection.cursor()
+            insert_query = """
+                INSERT INTO sentiment_summary (topic, avg_sentiment_score, article_count)
+                VALUES (%s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                avg_sentiment_score = VALUES(avg_sentiment_score),
+                article_count = VALUES(article_count),
+                updated_at = NOW()
+            """
+            
+            data_to_insert = [
+                (row['topic'], row['mean'], row['count'])
+                for _, row in sentiment_summary.iterrows()
+            ]
+
+            cursor.executemany(insert_query, data_to_insert)
+            connection.commit()
+            AppLog.info(f"{cursor.rowcount} sentiment summary records saved successfully.")
+        
+        except Exception as e:
+            AppLog.error(f"Failed to save sentiment summary data: {e}")
+            connection.rollback()
+        
+        finally:
+            if connection.is_connected():
+                cursor.close()
+                connection.close()
+
+def run_sentiment_analysis():
+    """Retrieve data from the database, process it, and save the sentiment analysis results"""
+    connection = init_connection_sql()
+    if connection is None:
+        AppLog.error("Error: Could not establish a MySQL connection.")
+        return
+    
+    try:
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM news_articles WHERE sentiment_score IS NULL")
+        data = cursor.fetchall()
+
+        if not data:
+            AppLog.info("No data available for sentiment analysis.")
+            return
+
+        analyzer = SentimentalAnalysis(data)
+        processed_data = analyzer.preprocess_and_analyze()
+        analyzer.save_result(processed_data)
+        analyzer.calculate_and_save_correlation()
+
+    except Exception as e:
+        AppLog.error(f"Failed to run sentiment analysis: {e}")
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+
 if __name__ == "__main__":
-    pass  # This will be handled in the main.py file.
+    pass  

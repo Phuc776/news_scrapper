@@ -41,3 +41,17 @@ CREATE TABLE clustering_results (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+CREATE TABLE correlation_data (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    correlation_data JSON
+);
+
+CREATE TABLE IF NOT EXISTS sentiment_summary (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    topic VARCHAR(255),
+    avg_sentiment_score FLOAT,
+    article_count INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
