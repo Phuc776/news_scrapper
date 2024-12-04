@@ -5,6 +5,7 @@ import AppHeader from '../../components/Header/Header';
 import styles from './HomePage.module.scss';
 import Dashboard from '../../components/Dashboard';
 import Clustering from '../../components/Clustering';
+import SentimentalChart from '../../components/SentimentalChart';
 
 const { Content } = Layout;
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8002';
@@ -16,8 +17,10 @@ const HomePage = () => {
     const [dataTopics, setdataTopics] = useState([]);
     const [dataCountries, setDataCountries] = useState([]);
     const [clusterData, setClusterData] = useState([]);
-    
-  
+    const [sentimentalData, setSentimentalData] = useState([]);
+    const [correlationData, setCorrelationData] = useState([]);
+
+
     useEffect(() => {
         fetch(`${API_URL}/articles/news-topics`)
             .then(response => response.json())
@@ -25,7 +28,7 @@ const HomePage = () => {
                 setdataTopics(data)
             })
             .catch(error => console.error('Error loading data:', error));
-        
+
         fetch(`${API_URL}/articles/news-countries`)
             .then(response => response.json())
             .then(data => {
@@ -38,7 +41,7 @@ const HomePage = () => {
             .then(data => {
                 console.log(data)
                 setTopics([
-                    'Tất cả', 
+                    'Tất cả',
                     ...data.topics
                 ])
             })
@@ -50,6 +53,18 @@ const HomePage = () => {
                 setClusterData(data)
             })
             .catch(error => console.error('Error loading data:', error));
+        fetch(`${API_URL}/sentimental/summaries`)
+            .then(response => response.json())
+            .then(data => {
+                setSentimentalData(data)
+            })
+            .catch(error => console.error('Error loading data:', error));
+        fetch(`${API_URL}/sentimental/correlation`)
+            .then(response => response.json())
+            .then(data => {
+                setCorrelationData(data)
+            })
+            .catch(error => console.error('Error loading data:', error));
     }, []);
 
     const handleFilterDataChange = (topic, startDate, endDate) => {
@@ -57,14 +72,14 @@ const HomePage = () => {
         let countriesUrl = `${API_URL}/articles/news-countries?topic=${topic}`;
         if (startDate) countriesUrl += `&start_date=${startDate}`;
         if (endDate) countriesUrl += `&end_date=${endDate}`;
-    
+
         fetch(countriesUrl)
             .then(response => response.json())
             .then(data => {
                 setDataCountries(data);
             })
             .catch(error => console.error('Error loading countries data:', error));
-    
+
         // Tạo URL động cho API topic
         let topicUrl = `${API_URL}/articles/news-topics`;
         if (startDate || endDate) {
@@ -72,7 +87,7 @@ const HomePage = () => {
             if (startDate) topicUrl += `start_date=${startDate}`;
             if (endDate) topicUrl += `${startDate ? '&' : ''}end_date=${endDate}`;
         }
-    
+
         fetch(topicUrl)
             .then(response => response.json())
             .then(data => {
@@ -81,18 +96,27 @@ const HomePage = () => {
             .catch(error => console.error('Error loading topic data:', error));
     };
 
+    const handleFilterDateClustering = (date) => {
+        fetch(`${API_URL}/clustering/keywords?created_at=${date}`)
+            .then(response => response.json())
+            .then(data => {
+                setClusterData(data)
+            })
+            .catch(error => console.error('Error loading data:', error));
+    };
+
     const handleNavClick = (item) => {
         setActiveItem(item);
-      };
+    };
 
     const renderContent = () => {
         switch (activeItem) {
             case 'dashboard':
                 return <Dashboard topics={topics} dataCountries={dataCountries} dataTopics={dataTopics} handleFilterDataChange={handleFilterDataChange} />;
             case 'documents':
-                return <Clustering data={clusterData} />;
+                return <Clustering data={clusterData} handleFilterDateClustering={handleFilterDateClustering} />;
             case 'settings':
-                return <div>Settings Content</div>;
+                return <SentimentalChart data={sentimentalData} correlationData={correlationData} />;
             default:
                 return <div>Page Not Found</div>;
         }

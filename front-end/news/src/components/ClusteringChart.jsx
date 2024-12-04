@@ -26,6 +26,9 @@ const ClusteringChart = ({ data }) => {
         title: {
             text: 'Clustering Keywords with Weights',
             left: 'center',
+            textStyle: {
+                fontSize: 20, // Adjust the font size here
+            },
         },
         tooltip: {
             trigger: 'item',
@@ -40,11 +43,17 @@ const ClusteringChart = ({ data }) => {
             axisLabel: {
                 interval: 0, // Đảm bảo tất cả các nhãn cụm được hiển thị
                 rotate: 45, // Xoay nhãn nếu cần
-            }
+            },
+            axisLabel: {
+                fontSize: 14, // Adjust the font size here
+            },
         },
         yAxis: {
             type: 'value',
             name: 'Weight',
+            axisLabel: {
+                fontSize: 14, // Adjust the font size here
+            },
         },
         series: [
             {
@@ -58,7 +67,7 @@ const ClusteringChart = ({ data }) => {
                     show: true,
                     formatter: '{b}', // Hiển thị từ khóa
                     position: 'top',
-                    fontSize: 10,
+                    fontSize: 14,
                 }
             }
         ]

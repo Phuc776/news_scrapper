@@ -14,7 +14,7 @@ const Sidebar = ({ onNavClick, activeItem }) => {
           className={`${styles.nav_item} ${activeItem === 'dashboard' ? styles.active : ''}`}
           onClick={() => onNavClick('dashboard')}
         >
-          <LuLayoutDashboard size={20} className={styles.icon}/>
+          <LuLayoutDashboard size={20} className={styles.icon} />
           <span className={styles.nav_text}>Dashboard</span>
         </li>
         <li
@@ -28,8 +28,8 @@ const Sidebar = ({ onNavClick, activeItem }) => {
           className={`${styles.nav_item} ${activeItem === 'settings' ? styles.active : ''}`}
           onClick={() => onNavClick('settings')}
         >
-          <LuLayoutDashboard size={20} className={styles.icon}/>
-          <span className={styles.nav_text}>Settings</span>
+          <LuLayoutDashboard size={20} className={styles.icon} />
+          <span className={styles.nav_text}>Sentimental</span>
         </li>
       </ul>
     </Sider>
