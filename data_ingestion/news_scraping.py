@@ -4,10 +4,55 @@ from utils.logger import AppLog
 from utils.config import API_KEY
 from utils.utils import init_connection_sql
 from datetime import datetime
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+import joblib
+import re
+import nltk
+import os
+
+# Define the path to the models folder
+model_path = os.path.join(os.path.dirname(__file__), 'Models', 'topic_classifier.pkl')
+vectorizer_path = os.path.join(os.path.dirname(__file__), 'Models', 'tfidf_vectorizer.pkl')
+
+# Load the models
+classifier = joblib.load(model_path)
+vectorizer = joblib.load(vectorizer_path)
+
+valid_labels = {'sport', 'tech', 'world', 'finance', 'politics', 'business',
+                'economics', 'entertainment', 'beauty', 'travel', 'music',
+                'food', 'science', 'gaming', 'energy'}
+
+lemmatizer = WordNetLemmatizer()
+stop_words = set(stopwords.words('english'))
+
+# Text preprocessing function
+def preprocess_text(text):
+    text = text.lower()  # Convert to lowercase
+    text = re.sub(r'[^a-z\s]', '', text)  # Remove special characters
+    words = nltk.word_tokenize(text)  # Tokenize
+    words = [lemmatizer.lemmatize(word) for word in words if word not in stop_words]
+    return ' '.join(words)
+
+# Function to label topics for articles
+def label_topics(articles):
+    for article in articles:
+        combined_text = preprocess_text(article.get('title', '') + ' ' + article.get('summary', ''))
+        tfidf_vector = vectorizer.transform([combined_text])  # Transform text using the loaded vectorizer
+        predicted_topic = classifier.predict(tfidf_vector)[0]  # Predict the topic
+        
+        # Update the topic only if it's not in the valid set
+        if article.get('topic') not in valid_labels:
+            article['topic'] = predicted_topic
+    return articles
 
 def insert_to_db(articles):
     """Bulk insert news data into the MySQL database."""
     AppLog.info(f"Start inserting {len(articles)} records to the database at {datetime.now()}.")
+
+    # Label topics before inserting
+    articles = label_topics(articles)
+
     connection = init_connection_sql()
     if connection is None:
         AppLog.error("Error: Could not establish a MySQL connection.")
