@@ -34,6 +34,7 @@ app = FastAPI(lifespan=app_lifespan)
 @app.get("/clustering")
 async def clustering_data_api():
     await job()
+    # run_clustering()
     return {"message": "Clustering data triggered successfully"}
 
 @app.get("/")

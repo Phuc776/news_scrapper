@@ -6,13 +6,11 @@ from utils.logger import AppLog
 
 async def crawl_data():
     """Crawl data from news websites and insert to database"""
-    for i in range(10):
-        try:
-            articles_data = get_raw_data(page=i+1)  # Assuming get_raw_data is an async function
-            insert_to_db(articles_data)  # Assuming insert_to_db is an async function
-            AppLog.info(f"Successfully inserted batch {i+1} of articles.")
-        except Exception as e:
-            AppLog.error(f"Error occurred while processing batch {i+1}: {e}")
+    try:
+        articles_data = get_raw_data()  # Assuming get_raw_data is an async function
+        insert_to_db(articles_data)  # Assuming insert_to_db is an async function
+    except Exception as e:
+        AppLog.error(f"Error while crawling data: {e}")
 
 
 async def periodic_crawl():
@@ -45,6 +43,14 @@ async def crawl_data_api():
 @app.get("/")
 def home():
     return {"message": "Hello, World!"}
+
+health_status = {"ready": False}
+
+@app.get("/health")
+async def health():
+    if health_status["ready"]:
+        return {"status": "healthy"}
+    return {"status": "unhealthy"}, 503
 
 if __name__ == "__main__":
     import uvicorn

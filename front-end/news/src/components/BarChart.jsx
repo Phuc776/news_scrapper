@@ -14,7 +14,7 @@ const BarChart = ({ title, xData, yData, name = 'bài báo' }) => {
       data: xData,
       axisLabel: { rotate: 45 },
       axisLabel: {
-        fontSize: 14, // Adjust the font size here
+        fontSize: 12, // Adjust the font size here
       },
     },
     yAxis: {

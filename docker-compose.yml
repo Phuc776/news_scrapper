@@ -53,6 +53,12 @@ services:
       - "8001:8001"  
     networks:
       - app_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 10s        
+      timeout: 5s          
+      retries: 3           
+      start_period: 60s 
 
   front_end_service:
     build: ./front-end/news
@@ -76,6 +82,7 @@ services:
     depends_on:
       - mysql_service
       - database_api_service
+      - data_ingestion_service
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
@@ -94,6 +101,7 @@ services:
     depends_on:
       - mysql_service
       - database_api_service
+      - data_ingestion_service
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}

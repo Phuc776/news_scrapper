@@ -7,7 +7,7 @@ from sklearn.metrics import silhouette_score
 from sklearn.cluster import KMeans
 from utils.utils import init_connection_sql
 from utils.logger import AppLog
-from datetime import datetime
+from datetime import datetime, timedelta
 import nltk
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -107,12 +107,13 @@ class TextClustering:
                 weights = ','.join([str(sum_terms[idx]) for idx in sorted_idx[:top_n]])
 
                 # Ghi vào cơ sở dữ liệu
+                now = datetime.now()
                 cursor = connection.cursor()
                 insert_query = """
                     INSERT INTO clustering_results (cluster_name, keywords, weights, created_at, updated_at)
-                    VALUES (%s, %s, %s, NOW(), NOW())
+                    VALUES (%s, %s, %s, %s, %s)
                 """
-                cursor.execute(insert_query, (cluster_name, keywords, weights))
+                cursor.execute(insert_query, (cluster_name, keywords, weights, now, now))
                 cursor.close()
 
             # Lưu thay đổi
@@ -141,13 +142,14 @@ def run_clustering():
     try:
         cursor = connection.cursor(dictionary=True)
         query = """
-                SELECT id, title, summary, author
-                FROM news_articles
-                WHERE title IS NOT NULL 
-                  AND summary IS NOT NULL 
-                  AND author IS NOT NULL 
-                LIMIT 1000;
-            """
+            SELECT id, title, summary, author
+            FROM news_articles
+            WHERE title IS NOT NULL 
+            AND summary IS NOT NULL 
+            AND author IS NOT NULL 
+            AND created_at >= CURDATE()
+            AND created_at < CURDATE() + INTERVAL 1 DAY;
+        """
         cursor.execute(query)
         data_json = cursor.fetchall()
         cursor.close()

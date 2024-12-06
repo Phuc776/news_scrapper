@@ -3,15 +3,11 @@ import mysql.connector
 from utils.logger import AppLog
 from utils.config import API_KEY
 from utils.utils import init_connection_sql
-from datetime import datetime
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
+from datetime import datetime, timedelta
 import joblib
 import re
-import nltk
 import os
 
-# Define the path to the models folder
 model_path = os.path.join(os.path.dirname(__file__), 'Models', 'topic_classifier.pkl')
 vectorizer_path = os.path.join(os.path.dirname(__file__), 'Models', 'tfidf_vectorizer.pkl')
 
@@ -23,16 +19,12 @@ valid_labels = {'sport', 'tech', 'world', 'finance', 'politics', 'business',
                 'economics', 'entertainment', 'beauty', 'travel', 'music',
                 'food', 'science', 'gaming', 'energy'}
 
-lemmatizer = WordNetLemmatizer()
-stop_words = set(stopwords.words('english'))
 
 # Text preprocessing function
 def preprocess_text(text):
     text = text.lower()  # Convert to lowercase
     text = re.sub(r'[^a-z\s]', '', text)  # Remove special characters
-    words = nltk.word_tokenize(text)  # Tokenize
-    words = [lemmatizer.lemmatize(word) for word in words if word not in stop_words]
-    return ' '.join(words)
+    return text
 
 # Function to label topics for articles
 def label_topics(articles):
@@ -124,7 +116,7 @@ def get_raw_data(page=1):
         return response.json().get("articles", [])
 
 if __name__ == "__main__":
-    for i in range(10):
+    for i in range(20):
         try:
             articles_data = get_raw_data(page=i+1)  # Assuming get_raw_data is an async function
             insert_to_db(articles_data)  # Assuming insert_to_db is an async function

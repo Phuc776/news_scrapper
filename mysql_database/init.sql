@@ -4,7 +4,7 @@ USE news_database;
 
 CREATE TABLE news_articles (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255),
+    title TEXT,
     author VARCHAR(255),
     published_date DATETIME,
     published_date_precision VARCHAR(50),

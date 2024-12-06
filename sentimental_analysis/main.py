@@ -35,6 +35,7 @@ app = FastAPI(lifespan=app_lifespan)
 @app.get("/sentimental")
 async def sentimental_data_api():
     await job()
+    # run_sentiment_analysis()
     return {"message": "Setimental data triggered successfully"}
 
 @app.get("/")
