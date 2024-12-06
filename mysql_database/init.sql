@@ -28,7 +28,6 @@ CREATE TABLE news_articles (
     clean_url_freq FLOAT,
     country_freq FLOAT,
     twitter_account_freq FLOAT, 
-    is_clustered BOOLEAN DEFAULT FALSE,
     -- frequency encoded data
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

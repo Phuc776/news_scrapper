@@ -6,7 +6,6 @@ import { Row, Col } from 'antd';
 
 const SentimentalChart = ({ data, correlationData }) => {
     // Prepare data for the chart
-    console.log(correlationData)
     const topics = data.map((item) => `${item.topic} ${"\n"} (${item.article_count} news)`);
     const avgSentimentScores = data.map((item) => item.avg_sentiment_score);
 

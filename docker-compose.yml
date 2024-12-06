@@ -82,6 +82,8 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
+    ports:
+      - "8005:8005"  
     networks:
       - app_network
 
@@ -98,6 +100,8 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
+    ports:
+      - "8006:8006"  
     networks:
       - app_network
       

@@ -1,14 +1,16 @@
-# Sử dụng Python base image
-FROM python:3.9-slim
+FROM python:3.9.16-slim-buster
 
-# Thiết lập thư mục làm việc
-WORKDIR /app
+ENV API_KEY=${API_KEY}
+ENV DB_HOST=${DB_HOST}
+ENV DB_USER=${DB_USER}
+ENV DB_NAME=${DB_NAME}
+ENV DB_PASSWORD=${DB_PASSWORD}
+ENV DB_PORT=${DB_PORT}
 
-# Sao chép mã nguồn vào container
-COPY . /app
+COPY . /api
 
-# Cài đặt các thư viện cần thiết
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r /api/requirements.txt
 
-# Chạy script Python
-CMD ["python", "main.py"]
+WORKDIR /api
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8005"]

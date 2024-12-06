@@ -19,7 +19,7 @@ const BarChart = ({ title, xData, yData, name = 'bài báo' }) => {
     },
     yAxis: {
       type: 'value', name: name, axisLabel: {
-        fontSize: 14, // Adjust the font size here
+        fontSize: 12, // Adjust the font size here
       },
     },
     series: [

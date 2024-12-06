@@ -6,3 +6,5 @@ pandas
 vaderSentiment
 scikit-learn
 nltk==3.8.1
+fastapi==0.115.4
+uvicorn==0.22.0

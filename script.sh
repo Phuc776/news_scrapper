@@ -9,6 +9,13 @@ docker build -t {name_image}:{tag_image} .
 docker run --name {name_container} -dp {port}:{port_expose} {name_image}:{tag_image}
 
 docker-compose down
-docker-compose up --build -d
+docker-compose up --build
 # Exec into mysql container
 docker exec -it mysql_service mysql -u {DB_USER} -p
+docker exec -it mysql_service mysql -u suyndy -p
+
+use news_database;
+show tables;
+truncate table clustering_results;
+truncate table sentiment_summary;
+truncate table correlation_data;

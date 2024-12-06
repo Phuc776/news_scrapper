@@ -189,7 +189,7 @@ def run_sentiment_analysis():
     
     try:
         cursor = connection.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM news_articles WHERE sentiment_score IS NULL")
+        cursor.execute("SELECT * FROM news_articles")
         data = cursor.fetchall()
 
         if not data:

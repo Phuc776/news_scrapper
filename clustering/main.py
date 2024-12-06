@@ -1,23 +1,45 @@
-import time
-import schedule
 from utils.logger import AppLog
 from clustering import run_clustering 
+import asyncio
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
 
-def job():
+async def job():
     AppLog.info("Running scheduled clustering task...")
     run_clustering()
 
-if __name__ == "__main__":
-    # Run the job once at the start
-    AppLog.info("Running initial clustering task...")
-    job()
-
-    # Schedule the job to run every day
-    schedule.every().day.do(job)
-   
-    AppLog.info("Scheduler started. Waiting for next scheduled task...")
-    
-    # Main loop to keep the container running
+async def periodic_clustering():
+    """This function will be called every day to run the clustering task"""
     while True:
-        schedule.run_pending()
-        time.sleep(1)
+        await job()
+        await asyncio.sleep(86400)  # 86400 seconds = 1 day
+
+# Lifespan Context Manager
+@asynccontextmanager
+async def app_lifespan(app: FastAPI):
+    clustering_task = asyncio.create_task(periodic_clustering())
+    try:
+        yield  
+    finally:
+        clustering_task.cancel()  
+        try:
+            await clustering_task
+        except asyncio.CancelledError:
+            AppLog.error("CLustering task is cancelled")
+            pass
+
+
+app = FastAPI(lifespan=app_lifespan)
+
+@app.get("/clustering")
+async def clustering_data_api():
+    await job()
+    return {"message": "Clustering data triggered successfully"}
+
+@app.get("/")
+def home():
+    return {"message": "Hello, World!"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8005)
